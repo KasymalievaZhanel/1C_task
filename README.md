@@ -19,3 +19,15 @@ Beta получает номера совпавших блоков из B или
 
 Если совпадения найдено не было для текущего смещения в файле A , вычисляется быстрая сигнатура для следующего байтового смещения и процедура поиска повторяется. При совпадении, смещение увеличивается на размер совпавшего блока и поиск продолжается.
 
+# Для файла который должен быть изменен
+ unpatched = open("unpatched.file", "rb")
+ hashes = blockchecksums(unpatched)
+
+# В удаленной системе после получения хэшей
+ patchedfile = open("patched.file", "rb")
+ delta = rsyncdelta(patchedfile, hashes)
+
+# Система с непропатченным файлом после получения `delta`
+ unpatched.seek(0)
+ save_to = open("locally-patched.file", "wb")
+ patchstream(unpatched, save_to, delta)
